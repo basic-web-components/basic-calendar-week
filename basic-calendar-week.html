@@ -20,13 +20,13 @@ Shows a single calendar week.
   }
   </style>
 
-  <basic-calendar-day class="firstDayOfWeek"></basic-calendar-day>
-  <basic-calendar-day></basic-calendar-day>
-  <basic-calendar-day></basic-calendar-day>
-  <basic-calendar-day></basic-calendar-day>
-  <basic-calendar-day></basic-calendar-day>
-  <basic-calendar-day></basic-calendar-day>
-  <basic-calendar-day class="lastDayOfWeek"></basic-calendar-day>
+  <basic-calendar-day class="day firstDayOfWeek"></basic-calendar-day>
+  <basic-calendar-day class="day"></basic-calendar-day>
+  <basic-calendar-day class="day"></basic-calendar-day>
+  <basic-calendar-day class="day"></basic-calendar-day>
+  <basic-calendar-day class="day"></basic-calendar-day>
+  <basic-calendar-day class="day"></basic-calendar-day>
+  <basic-calendar-day class="day lastDayOfWeek"></basic-calendar-day>
 
 </template>
 
@@ -94,6 +94,7 @@ Polymer( "basic-calendar-week", {
     var shadowRoot = this.shadowRoot;
     this.days.forEach( function( day, i ) {
       var newDay = dayTemplate.cloneNode();
+      newDay.classList.add( "day" );
       newDay.classList.toggle( "firstDayOfWeek", i === 0 );
       newDay.classList.toggle( "lastDayOfWeek", i === 6 );
       shadowRoot.replaceChild( newDay, day );
