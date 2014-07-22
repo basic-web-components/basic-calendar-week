@@ -1,11 +1,17 @@
 <!--
 Shows a single calendar week.
+
+To the degree possible, all language/culture-specific aspects of this component
+are localizable with the Globalize library (https://github.com/jquery/globalize).
+
+@element basic-calendar-week
+@demo http://basic-web-components.github.io/components/basic-calendar-week/
 -->
 
 <link rel="import" href="../basic-element/basic-element.html">
 <link rel="import" href="../basic-calendar-day/basic-calendar-day.html">
 
-<polymer-element name="basic-calendar-week" extends="basic-element" attributes="culture date dayElementTag">
+<polymer-element name="basic-calendar-week" extends="basic-element" attributes="culture date dayTag">
 
 <template>
 
@@ -59,7 +65,12 @@ BasicCalendarWeek = {
 
 Polymer( "basic-calendar-week", {
 
-  applyAuthorStyles: true,
+  /**
+   * The Globalize culture/language assigned to this element.
+   *
+   * @attribute culture
+   */
+  culture: null,
 
   cultureChanged: function() {
     this._refresh();
@@ -69,7 +80,12 @@ Polymer( "basic-calendar-week", {
     this._refresh();
   },
 
-  // Return the element showing the given date.
+  /**
+   * Returns the day element corresponding to the given date.
+   *
+   * @method dayElementForDate
+   * @param date
+   */
   dayElementForDate: function( date ) {
     var midnightOnDate = BasicCalendarDay.midnightOnDate( date );
     if ( midnightOnDate >= this.firstDate && midnightOnDate <= this.lastDate ) {
@@ -81,16 +97,17 @@ Polymer( "basic-calendar-week", {
     }
   },
 
-  // The elements for the days in the week, returned as an array.
-  get days() {
-    // Return all children but the style node.
-    return this.shadowRoot.querySelectorAll( ":not(style)" ).array();
-  },
+  /**
+   * The name for the element type which should be used to render the individual
+   * days in the week.
+   *
+   * @attribute dayTag
+   * @default "basic-calendar-day"
+   */
+  dayTag: "basic-calendar-day",
 
-  dayElementTag: "basic-calendar-day",
-
-  dayElementTagChanged: function() {
-    var dayTemplate = document.createElement( this.dayElementTag );
+  dayTagChanged: function() {
+    var dayTemplate = document.createElement( this.dayTag );
     var shadowRoot = this.shadowRoot;
     this.days.forEach( function( day, i ) {
       var newDay = dayTemplate.cloneNode();
@@ -102,10 +119,31 @@ Polymer( "basic-calendar-week", {
     this._refresh();
   },
 
+  /**
+   * Returns the array of day elements for the days in the month.
+   *
+   * @property days
+   */
+  get days() {
+    // Return all children but the style node.
+    return this.shadowRoot.querySelectorAll( ":not(style)" ).array();
+  },
+
+  /**
+   * The date of the first day in the week.
+   *
+   *
+   * @property firstDate
+   */
   get firstDate() {
     return BasicCalendarDay.midnightOnDate( this.days[0].date );
   },
 
+  /**
+   * The date of the last day in the week.
+   *
+   * @property lastDate
+   */
   get lastDate() {
     return BasicCalendarDay.midnightOnDate( this.days[6].date );
   },
