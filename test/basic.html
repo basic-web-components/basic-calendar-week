@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>Basic tests for basic-calendar-week</title>
+
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <!-- Step 1: import the element to test -->
+  <link rel="import" href="../basic-calendar-week.html">
+</head>
+<body>
+
+  <!-- You use the document as a place to set up your fixtures. -->
+  <basic-calendar-week id="bcw1"></basic-calendar-week>
+
+  <script>
+  var bcw1 = document.querySelector('#bcw1');
+  var initDate = new Date('10 March 2015');
+
+  suite('basic', function() {
+
+    test('default date', function(done) {
+      var now = new Date();
+      assert.equal(now.getDay(), bcw1.date.getDay());
+      assert.equal(now.getMonth(), bcw1.date.getMonth());
+      assert.equal(now.getFullYear(), bcw1.date.getFullYear());
+      done();
+    });
+
+    test('set date attribute', function(done) {
+      var now = new Date();
+      bcw1.date = now;
+      flush(function() {
+        assert.deepEqual(now, bcw1.date);
+        done();
+      });
+    });
+
+    test('dayElementForDate', function(done) {
+      var elem = bcw1.dayElementForDate(new Date());
+      assert(elem);
+      done();
+    });
+
+    test('days', function(done) {
+      bcw1.date = initDate;
+      flush(function() {
+        assert(bcw1.days);
+        assert.equal(bcw1.days.length, 7);
+        done();
+      });
+    });
+
+    test('firstDate', function(done) {
+      bcw1.date = initDate;
+      flush(function() {
+        var first = new Date('8 March 2015');
+        assert.deepEqual(bcw1.firstDate, first);
+        done();
+      });
+    });
+
+    test('lastDate', function(done) {
+      bcw1.date = initDate;
+      flush(function() {
+        var last = new Date('14 March 2015');
+        assert.deepEqual(bcw1.lastDate, last);
+        done();
+      });
+    });
+
+  });
+  </script>
+
+</body>
+</html>

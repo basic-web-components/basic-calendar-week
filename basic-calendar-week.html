@@ -54,23 +54,23 @@ so for now this component assumes that left-to-right works for most users.
 // TODO: Once Polymer supports constructor access here, use that instead.
 BasicCalendarWeek = {
 
-  daysSinceFirstDayOfWeek: function( date, culture ) {
-    var firstDayOfWeek = BasicCalendarWeek.firstDayOfWeek( culture );
-    return ( date.getDay() - firstDayOfWeek + 7 ) % 7;
+  daysSinceFirstDayOfWeek: function(date, culture) {
+    var firstDayOfWeek = BasicCalendarWeek.firstDayOfWeek(culture);
+    return (date.getDay() - firstDayOfWeek + 7) % 7;
   },
 
   // Return the index of the "first" day of the week in the indicated culture.
-  // In the U.S., this is 0 ( Sunday ), but in many places it's 1 (Monday).
+  // In the U.S., this is 0 (Sunday), but in many places it's 1 (Monday).
   // If no culture is supplied, the default culture is used.
-  firstDayOfWeek: function( culture ) {
+  firstDayOfWeek: function(culture) {
     return culture ? culture.calendar.firstDay : 0;
   },
 
   // Return the date of the first day of the week that contains the given date.
-  firstDateOfWeek: function( date, culture ) {
-    var daysSinceFirstDayOfWeek = this.daysSinceFirstDayOfWeek( date, culture );
-    var d = BasicCalendarDay.offsetDateByDays( date, -daysSinceFirstDayOfWeek );
-    return BasicCalendarDay.midnightOnDate( d );
+  firstDateOfWeek: function(date, culture) {
+    var daysSinceFirstDayOfWeek = this.daysSinceFirstDayOfWeek(date, culture);
+    var d = BasicCalendarDay.offsetDateByDays(date, -daysSinceFirstDayOfWeek);
+    return BasicCalendarDay.midnightOnDate(d);
   }
 
 };
@@ -100,18 +100,18 @@ Polymer({
    * @attribute dayElement
    * @default "basic-calendar-day"
    */
-  dayElement: "basic-calendar-day",
+  dayElement: 'basic-calendar-day',
 
   dayElementChanged: function() {
-    var dayTemplate = document.createElement( this.dayElement );
+    var dayTemplate = document.createElement(this.dayElement);
     var shadowRoot = this.shadowRoot;
-    this.days.forEach( function( day, i ) {
+    this.days.forEach(function(day, i) {
       var newDay = dayTemplate.cloneNode();
-      newDay.classList.add( "day" );
-      newDay.classList.toggle( "firstDayOfWeek", i === 0 );
-      newDay.classList.toggle( "lastDayOfWeek", i === 6 );
-      shadowRoot.replaceChild( newDay, day );
-    }.bind( this ));
+      newDay.classList.add('day');
+      newDay.classList.toggle('firstDayOfWeek', i === 0);
+      newDay.classList.toggle('lastDayOfWeek', i === 6);
+      shadowRoot.replaceChild(newDay, day);
+    }.bind(this));
     this._refresh();
   },
 
@@ -121,11 +121,11 @@ Polymer({
    * @method dayElementForDate
    * @param date
    */
-  dayElementForDate: function( date ) {
-    var midnightOnDate = BasicCalendarDay.midnightOnDate( date );
-    if ( midnightOnDate >= this.firstDate && midnightOnDate <= this.lastDate ) {
-      var dayIndex = BasicCalendarWeek.daysSinceFirstDayOfWeek( date, this.culture );
-      return this.days[ dayIndex ];
+  dayElementForDate: function(date) {
+    var midnightOnDate = BasicCalendarDay.midnightOnDate(date);
+    if (midnightOnDate >= this.firstDate && midnightOnDate <= this.lastDate) {
+      var dayIndex = BasicCalendarWeek.daysSinceFirstDayOfWeek(date, this.culture);
+      return this.days[dayIndex];
     } else {
       // Date falls outside week.
       return null;
@@ -139,7 +139,7 @@ Polymer({
    */
   get days() {
     // Return all children but the style node.
-    return this.shadowRoot.querySelectorAll( ":not(style)" ).array();
+    return this.shadowRoot.querySelectorAll(':not(style)').array();
   },
 
   /**
@@ -149,7 +149,7 @@ Polymer({
    * @property firstDate
    */
   get firstDate() {
-    return BasicCalendarDay.midnightOnDate( this.days[0].date );
+    return BasicCalendarDay.midnightOnDate(this.days[0].date);
   },
 
   /**
@@ -158,12 +158,12 @@ Polymer({
    * @property lastDate
    */
   get lastDate() {
-    return BasicCalendarDay.midnightOnDate( this.days[6].date );
+    return BasicCalendarDay.midnightOnDate(this.days[6].date);
   },
 
   ready: function() {
     this.super();
-    if ( !this.date && typeof BasicCalendarDay.today !== "undefined" ) {
+    if (!this.date && typeof BasicCalendarDay.today !== 'undefined') {
       // If no date is supplied, default to the current week.
       // REVIEW: This default behavior can cause unnecessary recalcs if a week
       // is created and then shortly thereafter a different date is set.
@@ -176,15 +176,15 @@ Polymer({
     var referenceDate = this.date;
     var referenceYear = referenceDate.getFullYear();
     var referenceMonth = referenceDate.getMonth();
-    var dateStart = BasicCalendarWeek.firstDateOfWeek( referenceDate, this.culture );
-    this.days.forEach( function( day, i ) {
-      var date = BasicCalendarDay.offsetDateByDays( dateStart, i );
+    var dateStart = BasicCalendarWeek.firstDateOfWeek(referenceDate, this.culture);
+    this.days.forEach(function(day, i) {
+      var date = BasicCalendarDay.offsetDateByDays(dateStart, i);
       day.date = date;
       // Apply inside/outside month styles to days that fall outside of the
       // month of the reference date for this week.
-      var insideMonth = ( date.getFullYear() === referenceYear && date.getMonth() === referenceMonth );
-      day.classList.toggle( "insideMonth", insideMonth );
-      day.classList.toggle( "outsideMonth", !insideMonth );
+      var insideMonth = (date.getFullYear() === referenceYear && date.getMonth() === referenceMonth);
+      day.classList.toggle('insideMonth', insideMonth);
+      day.classList.toggle('outsideMonth', !insideMonth);
     });
   }
 
